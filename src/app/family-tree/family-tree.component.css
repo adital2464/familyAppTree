@@ -1,5 +1,21 @@
-input::placeholder {
-    color: rgb(34, 32, 32);
-    font-size: 1.2em;
-    font-style: italic;
-  }
+/* Add these styles to your family-tree.component.css file */
+
+/* Style for the nested tree container */
+.nested-tree {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+/* Style for each node in the nested tree */
+.node {
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+}
+
+/* Style for children container */
+.children {
+  margin-left: 20px; /* Adjust the indentation based on your design */
+}

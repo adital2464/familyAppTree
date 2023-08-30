@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-
 interface FamilyNode {
   id: number;
   name: string;
@@ -23,6 +22,7 @@ export class FamilyTreeComponent {
   newChildNames: { [key: number]: string } = {}; // Initialize an object to store child names
   errorMessages: { [key: number]: string } = {};
   exportedTreeJson: string = ''; // The Json Tree property
+  largestTree: FamilyNode | null = null; // Initialize largestTree to null
 
   constructor(private toastr: ToastrService) {}
 
@@ -38,6 +38,7 @@ export class FamilyTreeComponent {
       this.familyNodes.push(newNode);
       this.newParentNames[node.id] = ''; // Clear the input field
       this.toastr.success('Parent added successfully.');
+      this.updateLargestTree();
     }
     else {
       this.toastr.error('Node already has a parent.');
@@ -59,6 +60,7 @@ export class FamilyTreeComponent {
       this.familyNodes.push(newNode);
       this.newSiblingNames[node.id] = ''; // Clear the input field
       this.toastr.success('Sibling added successfully.');
+      this.updateLargestTree();
     }
   }
 
@@ -76,6 +78,7 @@ export class FamilyTreeComponent {
       this.familyNodes.push(newNode);
       this.newChildNames[node.id] = ''; // Clear the input field
       this.toastr.success('Child added successfully.');
+      this.updateLargestTree();
     }
   }
 
@@ -98,6 +101,10 @@ export class FamilyTreeComponent {
         { id: 1, name: 'ME' }
       ;
     }
+    this.updateLargestTree();
+  }
+  private updateLargestTree() {
+    this.largestTree = this.findLargestTree(this.familyNodes);
   }
   //Prevent deleting ME or his Parent
   private isMeOrParent(node: FamilyNode): boolean {
@@ -139,6 +146,7 @@ export class FamilyTreeComponent {
     const largestTree = this.findLargestTree(this.familyNodes);
     const cloneWithoutCircles = this.removeCircularReferences(largestTree);
     this.exportedTreeJson = JSON.stringify(cloneWithoutCircles, null, 2);
+    this.toastr.success('The JSON tree is shown in the console - Please press F12');
     console.log(this.exportedTreeJson);
   }
   //function that find the largest tree--in order to show only 1 tree

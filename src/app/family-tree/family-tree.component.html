@@ -1,26 +1,44 @@
 <div class="tree">
-    <ul>
-      <li *ngFor="let node of familyNodes">
-        {{ node.name }}
-        <div>
-          <button class="btn btn-outline-success" (click)="addParent(node, newParentNames[node.id])">Add Parent</button>
-          <input type="text" [(ngModel)]="newParentNames[node.id]" placeholder="Enter Parent Name">
-
-          <button class="btn btn-outline-success" (click)="addSibling(node, newSiblingNames[node.id])">Add Sibling</button>
-          <input type="text" [(ngModel)]="newSiblingNames[node.id]" placeholder="Enter Sibling Name">
-
-          <button class="btn btn-outline-success" (click)="addChild(node, newChildNames[node.id])">Add Child</button>
-          <input type="text" [(ngModel)]="newChildNames[node.id]" placeholder="Enter Child Name">
-          
-          <button class="btn btn-outline-danger" (click)="deleteNode(node)">Delete Node</button>
-        </div>
-      </li>
+  <ul>
+    <li *ngFor="let node of familyNodes">
+      {{ node.name }}
       <div>
-        <button class="btn btn-outline-info" type="submit" (click)="exportTree()">Export Tree</button>
-        <div *ngIf="exportedTreeJson">
-          <h3>Exported Tree JSON:</h3>
-          <pre>{{ exportedTreeJson }}</pre>
+        <button class="btn btn-outline-success" (click)="addParent(node, newParentNames[node.id])">Add Parent</button>
+        <input type="text" [(ngModel)]="newParentNames[node.id]" placeholder="Enter Parent Name">
+
+        <button class="btn btn-outline-success" (click)="addSibling(node, newSiblingNames[node.id])">Add Sibling</button>
+        <input type="text" [(ngModel)]="newSiblingNames[node.id]" placeholder="Enter Sibling Name">
+
+        <button class="btn btn-outline-success" (click)="addChild(node, newChildNames[node.id])">Add Child</button>
+        <input type="text" [(ngModel)]="newChildNames[node.id]" placeholder="Enter Child Name">
+
+        <button class="btn btn-outline-danger" (click)="deleteNode(node)">Delete Node</button>
+      </div>
+    </li>
+    <div>
+      <button class="btn btn-outline-info" type="submit" (click)="exportTree()">Export Tree</button>
+      <div *ngIf="exportedTreeJson"></div>
+    </div>
+  </ul>
+</div>
+
+<div class="nested-tree">
+  <div class="nested-tree-node">
+    <ng-container *ngIf="largestTree">
+      <ng-container *ngTemplateOutlet="displayNestedTree; context: { node: largestTree }"></ng-container>
+    </ng-container>  
+  </div>
+</div>
+
+<ng-template #displayNestedTree let-node="node">
+  <div class="node">
+    {{ node.name }}
+    <div class="children">
+      <div *ngIf="node.children && node.children.length > 0">
+        <div class="child" *ngFor="let child of node.children">
+          <ng-container *ngTemplateOutlet="displayNestedTree; context: { node: child }"></ng-container>
         </div>
       </div>
-    </ul>
-</div>
+    </div>
+  </div>
+</ng-template>
